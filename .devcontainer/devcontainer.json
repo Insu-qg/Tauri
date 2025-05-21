@@ -1,0 +1,30 @@
+{
+    "name": "Tauri Development",
+    "dockerFile": "../Dockerfile",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "tauri-apps.tauri-vscode",
+                "rust-lang.rust-analyzer"
+            ]
+        }
+    },
+    "forwardPorts": [1420],
+    "remoteUser": "vscode",
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": true,
+            "username": "vscode",
+            "userUid": "1000",
+            "userGid": "1000"
+        }
+    },
+    "runArgs": [
+        "--init",
+        "--security-opt", "seccomp=unconfined"
+    ],
+    "initializeCommand": ".devcontainer/check-xserver.ps1",
+    "remoteEnv": {
+        "DISPLAY": "host.docker.internal:0"
+    }
+}
