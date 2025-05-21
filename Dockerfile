@@ -8,6 +8,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV DISPLAY=:0
 ENV XDG_RUNTIME_DIR=/tmp/runtime-root
 
+RUN mkdir -p /tmp/runtime-root && chmod 777 /tmp/runtime-root
+
 # Installer les dépendances système
 RUN apt-get update && apt-get install -y \
     curl \

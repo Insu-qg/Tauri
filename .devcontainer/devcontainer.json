@@ -1,30 +1,28 @@
 {
-    "name": "Tauri Development",
-    "dockerFile": "../Dockerfile",
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "tauri-apps.tauri-vscode",
-                "rust-lang.rust-analyzer"
-            ]
-        }
-    },
-    "forwardPorts": [1420],
-    "remoteUser": "vscode",
-    "features": {
-        "ghcr.io/devcontainers/features/common-utils:2": {
-            "installZsh": true,
-            "username": "vscode",
-            "userUid": "1000",
-            "userGid": "1000"
-        }
-    },
-    "runArgs": [
-        "--init",
-        "--security-opt", "seccomp=unconfined"
-    ],
-    "initializeCommand": ".devcontainer/check-xserver.ps1",
-    "remoteEnv": {
-        "DISPLAY": "host.docker.internal:0"
+  "name": "Tauri Dev Container",
+  "build": {
+    "dockerfile": "../Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "editor.formatOnSave": true
+      },
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-next",
+        "eamodio.gitlens"
+      ]
     }
+  },
+  "forwardPorts": [1420],
+  "postCreateCommand": "npm install && cargo build",
+  "remoteUser": "root",
+  "features": {},
+  "remoteEnv": {
+    "DISPLAY": ":0",
+    "XDG_RUNTIME_DIR": "/tmp/runtime-root"
+  }
 }
