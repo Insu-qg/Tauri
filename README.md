@@ -148,6 +148,22 @@ npm create tauri-app@latest
 
 ---
 
+## Architecture
+
+![width:700px](Tauri_archi.png)
+
+---
+
+## Explications
+
+**Tauri** : C’est la grande caisse qui tient tout ensemble. Elle réunit les temps d’exécution, les macros, les utilitaires et l’API en un seul produit final. Il s'occupe de la gestion de la configuration, de l'injection de script, il héberge l'API et gère aussi les mise à jour.
+
+**Tauri-runtime-wry** : Cette caisse ouvre des interactions directes au niveau du système spécifiquement pour WRY, telles que l’impression, la détection d'écran, et d’autres tâches liées au fenêtrage.
+
+**Upstream** : TAO pour la création et la gestion des fenêtres d’application, et WRY pour l’interfaçage avec le Webview qui vit dans la fenêtre.
+
+---
+
 ## Merci 🙌
 
 Des questions ?  
