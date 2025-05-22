@@ -170,8 +170,68 @@ Des questions ?
 
 ---
 
+## Set up TP
+
+Github : https://github.com/Insu-qg/Tauri
+
 Build :
 docker build -t tauri-builder .
 
 Run :
 docker run -it --rm -e DISPLAY=host.docker.internal:0.0 -v "${PWD}:/app" tauri-builder
+
+---
+
+## TP
+
+### 1
+
+Crée une application Tauri appelée SecureNotes :
+
+L'interface (frontend) doit contenir :
+
+- Un champ textarea pour écrire des notes
+
+- Deux boutons : “Enregistrer” et “Ouvrir”
+
+En appuyant sur “Enregistrer” :
+
+- Le contenu du textarea est envoyé à Rust via invoke()
+
+- Rust enregistre le fichier localement (nom par défaut : note.txt)
+
+En appuyant sur “Ouvrir” :
+
+- Rust lit le fichier note.txt
+
+- Le contenu est renvoyé au frontend pour l'afficher dans le textarea
+
+Sécurise l’API :
+
+- N’autoriser que des fichiers .txt
+
+- Bloquer les chemins absolus (pas d’accès arbitraire au disque)
+
+### 2
+
+Objectif :
+
+Tu veux sauvegarder une note chiffrée dans un fichier (note.txt).
+
+Et pouvoir la déchiffrer à la lecture.
+
+Le chiffrement doit se faire côté Rust, pas React (meilleure sécurité).
+
+tu dois utiliser aes-gcm pour réaliser cela.
+
+### 3 
+ 
+Appel natif :
+
+faire un sorte d'avoir une notification quand vous sauvegardez un fichier
+pensez aussi à build l'app !
+
+
+## Documentation pour vous aider
+
+https://tauri.app
