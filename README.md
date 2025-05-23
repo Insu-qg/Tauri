@@ -174,11 +174,23 @@ Des questions ?
 
 Github : https://github.com/Insu-qg/Tauri
 
-Build :
-docker build -t tauri-builder .
+si vous êtes sur docker :
 
+Build :
+
+```bash
+docker build -t tauri-builder .
+```
 Run :
+```bash
 docker run -it --rm -e DISPLAY=host.docker.internal:0.0 -v "${PWD}:/app" tauri-builder
+```
+
+sinon : 
+
+```bash
+npm run tauri dev
+```
 
 ---
 
@@ -234,4 +246,117 @@ pensez aussi à build l'app !
 
 ## Documentation pour vous aider
 
-https://tauri.app
+https://tauri.app/plugin/
+
+## Aides supplémentaires
+
+### 1
+
+```bash
+npm install @tauri-apps/plugin-fs
+```
+
+config :
+
+```json
+{
+  "plugins": {
+    "fs": {
+      "scope": ["./note.txt"]
+    }
+  }
+}
+```
+
+### 2
+
+dans les dépendances de rust (Cargo.toml) :
+
+ajouter à [dependencies] :
+
+aes-gcm = "0.10"
+base64 = "0.21"
+
+
+### 3
+
+```bash
+npm install @tauri-apps/api
+```
+
+un exemple est disponible dans la documentation de Tauri.
+
+
+### Bonus (exemple de code)
+
+```Rust
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
+#[tauri::command]
+fn process_note(note: &str) -> String {
+    // Ici, on emprunte la note sans en prendre possession.
+    // Rust évite de copier inutilement la donnée.
+    format!("Note reçue (empruntée) : {}", note)
+}
+
+fn main() {
+    tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![process_note])
+        .run(tauri::generate_context!())
+        .expect("Erreur au lancement de Tauri");
+}
+```
+
+
+```Typescript
+import { useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
+
+function App() {
+  const [note, setNote] = useState("");
+  const [response, setResponse] = useState("");
+
+  const handleSend = async () => {
+    const result = await invoke<string>("process_note", { note });
+    setResponse(result);
+  };
+
+  return (
+    <div style={{ padding: "2rem" }}>
+      <h1>📝 SecureNotes - Démo Invoke + Borrowing</h1>
+      <textarea
+        rows={10}
+        cols={50}
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        style={{ width: "100%", marginBottom: "1rem" }}
+      />
+      <div>
+        <button onClick={handleSend}>Envoyer à Rust</button>
+      </div>
+      <p style={{ marginTop: "1rem", fontStyle: "italic" }}>
+        Réponse de Rust : {response}
+      </p>
+    </div>
+  );
+}
+
+export default App;
+```
+
+&str = il emprunte juste une vue en lecture des données (plus rapide, plus sûr).
+
+Ici, on ne veut que lire la note, donc &str est plus approprié.
+
+
+gestion de plugin de notification et aide sur le main: 
+
+```Rust
+fn main() {
+    tauri::Builder::default()
+        .plugin(tauri_plugin_notification::init())
+        .invoke_handler(tauri::generate_handler![save_note, load_note])
+        .run(tauri::generate_context!())
+        .expect("Erreur au lancement de l'app");
+}
+```
