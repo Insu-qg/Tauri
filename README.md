@@ -252,6 +252,48 @@ https://tauri.app/plugin/
 
 ### 1
 
+exemple de création d'un fichier avec Rust :
+
+```Rust
+use std::fs::File;
+use std::io::Write;
+
+fn main() -> std::io::Result<()> {
+    // On crée un fichier nommé "exemple.txt"
+    let mut fichier = File::create("exemple.txt")?;
+
+    // On écrit du texte dans le fichier
+    fichier.write_all(b"Bonjour, ceci est un fichier créé par Rust.")?;
+
+    println!("Fichier créé avec succès !");
+    Ok(())
+}
+```
+
+lire un fichier avec Rust :
+
+```Rust
+use std::fs::File;
+use std::io::{self, Read};
+
+fn main() -> io::Result<()> {
+    // On ouvre le fichier existant
+    let mut fichier = File::open("exemple.txt")?;
+
+    // On crée une variable pour stocker le contenu
+    let mut contenu = String::new();
+
+    // On lit le fichier dans la variable
+    fichier.read_to_string(&mut contenu)?;
+
+    // On affiche ce qu'on a lu
+    println!("Contenu du fichier :\n{}", contenu);
+    
+    Ok(())
+}
+```
+
+
 ```bash
 npm install @tauri-apps/plugin-fs
 ```
