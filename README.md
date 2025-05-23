@@ -196,6 +196,8 @@ npm run tauri dev
 
 ## TP
 
+Des aides sont fournies plus bas.
+
 ### 1
 
 Crée une application Tauri appelée SecureNotes :
