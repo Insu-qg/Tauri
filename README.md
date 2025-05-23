@@ -106,6 +106,34 @@ Si vous **n'avez pas Docker** :
 
 ---
 
+Qu’est-ce que let mut en Rust ?
+Par défaut, les variables en Rust sont immuables (non modifiables).
+
+Quand on écrit simplement :
+```rust
+let x = 5;
+```
+
+On ne peut pas changer x ensuite :
+
+```rust
+x = 6; // ❌ ERREUR : cannot assign twice to immutable variable
+✅ Solution : rendre une variable mutable
+```
+
+---
+
+On utilise alors mut :
+
+```rust
+let mut x = 5;
+x = 6; // ✅ autorisé
+```
+
+Le mot-clé mut signifie donc "je veux pouvoir modifier cette variable plus tard".
+
+---
+
 ## Architecture interne de Tauri 🏗️
 
 Tauri repose sur deux composants internes :
@@ -124,6 +152,22 @@ Tauri repose sur deux composants internes :
   - **WebKit** sur macOS/Linux
   - **WebView2** (Edge) sur Windows
 - Gère la communication JS ↔ Rust
+
+---
+
+## Architecture
+
+![width:700px](Tauri_archi.png)
+
+---
+
+## Explications
+
+**Tauri** : C’est la grande caisse qui tient tout ensemble. Elle réunit les temps d’exécution, les macros, les utilitaires et l’API en un seul produit final. Il s'occupe de la gestion de la configuration, de l'injection de script, il héberge l'API et gère aussi les mise à jour.
+
+**Tauri-runtime-wry** : Cette caisse ouvre des interactions directes au niveau du système spécifiquement pour WRY, telles que l’impression, la détection d'écran, et d’autres tâches liées au fenêtrage.
+
+**Upstream** : TAO pour la création et la gestion des fenêtres d’application, et WRY pour l’interfaçage avec le Webview qui vit dans la fenêtre.
 
 ---
 
@@ -148,19 +192,13 @@ npm create tauri-app@latest
 
 ---
 
-## Architecture
-
-![width:700px](Tauri_archi.png)
+macOS :
+![width:800px](tauri-mac.jpg)
 
 ---
 
-## Explications
-
-**Tauri** : C’est la grande caisse qui tient tout ensemble. Elle réunit les temps d’exécution, les macros, les utilitaires et l’API en un seul produit final. Il s'occupe de la gestion de la configuration, de l'injection de script, il héberge l'API et gère aussi les mise à jour.
-
-**Tauri-runtime-wry** : Cette caisse ouvre des interactions directes au niveau du système spécifiquement pour WRY, telles que l’impression, la détection d'écran, et d’autres tâches liées au fenêtrage.
-
-**Upstream** : TAO pour la création et la gestion des fenêtres d’application, et WRY pour l’interfaçage avec le Webview qui vit dans la fenêtre.
+Windows : 
+![width:800px](tauri_win.png)
 
 ---
 
@@ -245,12 +283,18 @@ Appel natif :
 faire en sorte d'avoir une notification quand vous sauvegardez un fichier
 pensez aussi à build l'app !
 
+```Bash
+npm run tauri build  
+```
+
+
 
 ## Documentation pour vous aider
 
 https://tauri.app/plugin/
 
 ## Aides supplémentaires
+
 
 ### 1
 
