@@ -240,7 +240,7 @@ tu dois utiliser aes-gcm pour réaliser cela.
  
 Appel natif :
 
-faire un sorte d'avoir une notification quand vous sauvegardez un fichier
+faire en sorte d'avoir une notification quand vous sauvegardez un fichier
 pensez aussi à build l'app !
 
 
