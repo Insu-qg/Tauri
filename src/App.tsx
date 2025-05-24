@@ -1,51 +1,97 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
+import { isPermissionGranted, requestPermission,sendNotification } from "@tauri-apps/plugin-notification";
 import "./App.css";
+import { useState } from 'react';
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  const [note, setNote] = useState('');
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
+  async function notifyUser() {
+  let permissionGranted = await isPermissionGranted();
+  if (!permissionGranted) {
+    const permission = await requestPermission();
+    permissionGranted = permission === 'granted';
   }
+  if (permissionGranted) {
+    sendNotification({
+      title: "SecureNotes",
+      body: "✅ Note sauvegardée avec succès !",
+    });
+  } else {
+    alert("Notifications non autorisées !");
+  }
+}
+
+  const handleSave = async () => {
+    try {
+      await invoke("save_note", { content: note });
+      notifyUser();
+    } catch (error) {
+      alert("Erreur lors de la sauvegarde : " + error);
+    }
+  };
+
+  const handleLoad = async () => {
+    try {
+      const content = await invoke<string>("load_note");
+      setNote(content);
+    } catch (error) {
+      alert("Erreur lors du chargement : " + error);
+    }
+  };
 
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+      <h1>📝 SecureNotes</h1>
+      <textarea
+        rows={10}
+        cols={50}
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        style={{ width: "100%", marginBottom: "1rem" }}
+      />
+      <div>
+        <button onClick={handleSave}>💾 Enregistrer</button>
+        <button onClick={handleLoad} style={{ marginLeft: "1rem" }}>
+          📂 Ouvrir
+        </button>
       </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+    </div>
   );
 }
 
 export default App;
+
+// import { useState } from "react";
+// import { invoke } from "@tauri-apps/api/core";
+
+// function App() {
+//   const [note, setNote] = useState("");
+//   const [response, setResponse] = useState("");
+
+//   const handleSend = async () => {
+//     const result = await invoke<string>("process_note", { note });
+//     setResponse(result);
+//   };
+
+//   return (
+//     <div style={{ padding: "2rem" }}>
+//       <h1>📝 SecureNotes - Démo Invoke + Borrowing</h1>
+//       <textarea
+//         rows={10}
+//         cols={50}
+//         value={note}
+//         onChange={(e) => setNote(e.target.value)}
+//         style={{ width: "100%", marginBottom: "1rem" }}
+//       />
+//       <div>
+//         <button onClick={handleSend}>Envoyer à Rust</button>
+//       </div>
+//       <p style={{ marginTop: "1rem", fontStyle: "italic" }}>
+//         Réponse de Rust : {response}
+//       </p>
+//     </div>
+//   );
+// }
+
+// export default App;
